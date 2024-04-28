@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Payment</title>
+</head>
+<style>
+body, html {
+  height: 100%;
+  margin: 0;
+  font-size: 24px;
+  background-color: #162238;
+    color: white;
+}
+
+.form-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+  /* background-color: #f7f7f7; */
+  /* background-color: #281313; */
+  background-color: #2b426e;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+select {
+  /* Other styles for select element */
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  color: #555;
+  cursor: pointer;
+  appearance: none;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: 0 0 5px #4CAF50;
+}
+
+
+
+
+label, input[type="text"], select {
+  margin-bottom: 20px;
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+label, input[type="email"], select {
+  margin-bottom: 20px;
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+input[type="text"]:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 5px #4CAF50;
+}
+
+label, input[type="number"], select {
+  margin-bottom: 20px;
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+
+input[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #3e8e41;
+}
+
+.home-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+button{
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #3e8e41;
+}
+
+
+</style>
+<body>
+  <div class="form-container">
+    <form id="payment-form" method="POST" action="/feesdo">
+      <h2>School Fees Payment Form</h2>
+  
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+  
+      <label for="regnum">Registration Number:</label>
+      <input type="text" id="regnum" name="regnum" required>
+
+      <label for="email">Email Id:</label>
+      <input type="email" id="email" name="email" required>
+  
+      <label for="class-select">Class:</label>
+      <select id="class-select" name="classSelect">
+        <option value="">-- Select Class --</option>
+        <option value="class1">Class 1</option>
+        <option value="class2">Class 2</option>
+        <option value="class3">Class 3</option>
+        <option value="class4">Class 4</option>
+        <option value="class5">Class 5</option>
+        <option value="class6">Class 6</option>
+        <option value="class7">Class 7</option>
+        <option value="class8">Class 8</option>
+        <option value="class9">Class 9</option>
+        <option value="class10">Class 10</option>
+        <option value="class11">Class 11</option>
+        <option value="class12">Class 12</option>
+      </select>
+  
+      <label for="fees">Fees to be Paid (in Rupees):</label>
+      <input type="number" id="fees-input" name="fees" placeholder="Fees to be Paid (in Rupees):">
+  
+      <button id="pay-now-button">Pay Now</button>
+    </form>
+  </div>
+  
+  <form action="/" method="POST">
+  <div class="home-button">
+    <button>Home</button>
+  </form>
+  </div>
+  
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById("pay-now-button").onclick = async function (e) {
+      e.preventDefault();
+  
+      let name = document.getElementById("name").value;
+      let regnum = document.getElementById("regnum").value;
+      let classSelect = document.getElementById("class-select").value;
+      let fees = document.getElementById("fees-input").value;
+      let email = document.getElementById("email").value;
+  
+      let response = await fetch("/payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: fees,
+          name,
+          regnum,
+          classSelect,
+          fees,
+          email,
+        }),
+      });
+  
+      let orderData = await response.json();
+      console.log(orderData);
+  
+      if (orderData.success) {
+        var options = {
+          key: "rzp_test_QS5nYws4WQAItA", // Enter the Key ID generated from the Dashboard
+          amount: orderData.amount * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          currency: "INR",
+          order_id: orderData.order.id, //This is the Order ID obtained from the response of the "/payment" endpoint
+          handler: function (response) {
+            // Handle the successful payment response here
+            
+            alert(orderData.receipt);
+            // Submit the form after successful payment
+            document.getElementById("payment-form").submit();
+          },
+        };
+   
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+      } else {
+        alert("Payment request failed");
+      }
+    };
+  </script>
+  
+
+<script>
+    const classSelect = document.getElementById("class-select");
+    const feesInput = document.getElementById("fees-input");
+  
+    classSelect.addEventListener("change", () => {
+      switch (classSelect.value) {
+        case "class1":
+          feesInput.value = "3000";
+          break;
+        case "class2":
+          feesInput.value = "3500";
+          break;
+        case "class3":
+          feesInput.value = "4000";
+          break;
+        case "class4":
+          feesInput.value = "4500";
+          break;
+        case "class5":
+          feesInput.value = "5000";
+          break;
+        case "class6":
+          feesInput.value = "5500";
+          break;
+        case "class7":
+          feesInput.value = "6000";
+          break;
+        case "class8":
+          feesInput.value = "6500";
+          break;
+        case "class9":
+          feesInput.value = "7000";
+          break;
+        case "class10":
+          feesInput.value = "7500";
+          break;
+        case "class11":
+          feesInput.value = "8000";
+          break;
+        case "class12":
+          feesInput.value = "8500";
+          break;
+        default:
+          feesInput.value = "";
+          break;
+      }
+    });
+  </script>
+</html>

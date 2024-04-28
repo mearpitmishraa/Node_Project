@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+        body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 90%;
+      height: 90vh;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      overflow: auto;
+    }
+
+    .container-1 {
+      max-width: 80%;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      margin-bottom: 20px;
+      border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+      background-color: #f2f2f2;
+      color: #333;
+      font-weight: bold;
+    }
+
+    table td {
+      color: #555;
+    }
+
+    .submit-button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-button:hover {
+      background-color: #45a049;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1>Student Fee Payment Status</h1>
+  
+        <table id="student-table">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Fee Amount</th>
+            <th>Payment Status</th>
+            <th>Date/Time</th>
+          </tr>
+          {{tableContent}}
+        </table>
+      </div>
+      <form action="/" method="POST">
+      <button class="submit-button">GO BACK</button>
+    </form>
+</body>
+</html>
